@@ -1,0 +1,40 @@
+---
+- name: "transmission and webui for transmission"
+  hosts: localhost
+  vars_files:
+    - user_data.yml
+  become: true
+  tasks:
+
+     - name: "installing epel-release, transmission, and transmission-cli transmission-common transmission-daemon"
+       yum:
+         name:
+           - epel-release
+           - transmission-cli  
+           - transmission-common
+           - transmission-daemon
+         state: present
+     - name: "starting and stopping transmission"
+       service:
+         name: transmission-daemon
+         state: restarted
+         enabled: true
+     - name: stopping transmission for editing configuration file
+       service:
+         name: transmission-daemon
+         state: stopped
+         enabled: true
+     - name : "copying transmission configuration file "
+       template: 
+         src: settings.json
+         dest: /var/lib/transmission/.config/transmission-daemon/settings.json
+         owner: transmission 
+         group: transmission
+     - name: "restarting transmission"  
+       service:
+         name: transmission-daemon
+         state: restarted
+         enabled: true
+     - name: "Finished installing transmission"
+       debug:
+         msg: "please visit http://your_ip:9091"   
