@@ -5,11 +5,13 @@
     - user_data.yml
   become: true
   tasks:
-
-     - name: "installing epel-release, transmission, and transmission-cli transmission-common transmission-daemon"
+     - name: installing epel-release
+       yum:
+         name: epel-release
+         state: present
+     - name: "installing  transmission, and transmission-cli transmission-common transmission-daemon"
        yum:
          name:
-           - epel-release
            - transmission-cli  
            - transmission-common
            - transmission-daemon
